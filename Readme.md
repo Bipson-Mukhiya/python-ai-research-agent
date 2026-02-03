@@ -1,0 +1,80 @@
+# AI Research Agent with Gemini & LangChain
+
+This project is a Python-based AI Agent capable of performing autonomous research on any topic. It utilizes **Google's Gemini 1.5 Flash** (via LangChain) to understand queries, and uses a suite of tools to gather information from the web and Wikipedia, finally structuring and saving the results.
+
+## 🚀 Features
+
+- **Autonomous Research**: Break down queries and search for information.
+- **Multi-Source Retrieval**:
+  - **DuckDuckGo Search**: For real-time web results.
+  - **Wikipedia**: For encyclopedic knowledge.
+- **Structured Output**: Returns data in a consistent JSON format (Topic, Summary, Sources, Tools Used).
+- **File Persistence**: Can save research findings directly to text files.
+- **Robust Error Handling**: Includes automatic retries for Google API rate limits (429 errors).
+
+## 🛠️ Prerequisites
+
+- Python 3.10 or higher
+- A Google AI Studio API Key (for Gemini)
+
+## 📦 Installation
+
+1.  **Clone the repository** (if applicable) or navigate to the project folder.
+
+2.  **Create a virtual environment**:
+
+    ```bash
+    python3 -m venv myenv
+    source myenv/bin/activate  # On Windows use: myenv\Scripts\activate
+    ```
+
+3.  **Install dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+## ⚙️ Configuration
+
+1.  Create a `.env` file in the root directory.
+2.  Add your Google API Key:
+    ```env
+    GOOGLE_API_KEY=your_actual_api_key_here
+    ```
+    _You can get a free key from [Google AI Studio](https://aistudio.google.com/app/apikey)._
+
+## 🏃 Usage
+
+Run the main script:
+
+```bash
+python main.py
+```
+
+1.  The agent will ask: `Ask a question about anything:`
+2.  Type your query (e.g., _"What is the future of quantum computing?"_).
+3.  The agent will use its tools to find answers.
+4.  It will display the structured result and optionally save it to a file.
+
+## 📂 Project Structure
+
+- `main.py`: The entry point. Initializes the Gemini LLM, configures the Agent, handles the user input loop, and manages error handling (retries).
+- `tools.py`: Definitions for the agent's capabilities:
+  - `search_tool`: DuckDuckGo search integration.
+  - `wiki_tool`: Wikipedia API wrapper.
+  - `save_tool`: Function to write text to disk.
+- `requirements.txt`: Python package dependencies.
+
+## ⚠️ Troubleshooting
+
+### Quota Exceeded (429 Error)
+
+If you see `ResourceExhausted` or "Quota exceeded", it means you have hit the daily limit for the free Gemini API tier.
+
+- **Solution**: The script will automatically wait and retry. If it persists, wait for the daily quota reset (usually 24 hours) or switch to a different Google account/model.
+
+### Model Not Found
+
+If you encounter a 404 error regarding the model name:
+
+- Edit `main.py` and change the model name in `ChatGoogleGenerativeAI(model="...")`.
+- Common valid names: `gemini-1.5-flash`, `gemini-pro`.
