@@ -1,6 +1,6 @@
 # AI Research Agent with Gemini & LangChain
 
-This project is a Python-based AI Agent capable of performing autonomous research on any topic. It utilizes **Google's Gemini 1.5 Flash** (via LangChain) to understand queries, and uses a suite of tools to gather information from the web and Wikipedia, finally structuring and saving the results.
+This project is a Python-based AI Agent capable of performing autonomous research on any topic. It utilizes **Google's Gemini 2.5 Flash** (via LangChain) to understand queries, and uses a suite of tools to gather information from the web and Wikipedia, finally structuring and saving the results.
 
 ## 🚀 Features
 
@@ -68,13 +68,24 @@ python main.py
 
 ### Quota Exceeded (429 Error)
 
-If you see `ResourceExhausted` or "Quota exceeded", it means you have hit the daily limit for the free Gemini API tier.
+If you see `ResourceExhausted` or "Quota exceeded", it means you have hit the rate limit for the free Gemini API tier.
 
-- **Solution**: The script will automatically wait and retry. If it persists, wait for the daily quota reset (usually 24 hours) or switch to a different Google account/model.
+- **Free Tier Limits**: `gemini-2.5-flash` has a limit of **5 requests per minute (RPM)** on the free tier.
+- **Solution**: The script will automatically wait 60 seconds and retry up to 5 times. If the issue persists:
+  - Wait for the rate limit window to reset (1 minute for RPM limits)
+  - Reduce the frequency of requests
+  - Consider upgrading to a paid plan for higher quotas
 
-### Model Not Found
+### Model Not Found (404 Error)
 
 If you encounter a 404 error regarding the model name:
 
-- Edit `main.py` and change the model name in `ChatGoogleGenerativeAI(model="...")`.
-- Common valid names: `gemini-1.5-flash`, `gemini-pro`.
+- **Check Available Models**: Run `python list_models.py` to see which models are available for your API key.
+- **Update Model**: Edit `main.py` line 21 and change the model name in `ChatGoogleGenerativeAI(model="...")`.
+- **Recommended Free Tier Models**: `gemini-2.5-flash`, `gemini-flash-latest`
+
+### Rate Limit Best Practices
+
+- The agent makes multiple API calls per query (for tool calling and final response)
+- On free tier, limit your queries to avoid hitting the 5 RPM cap
+- Each research query may use 3-5 API calls depending on complexity

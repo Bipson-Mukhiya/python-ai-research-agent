@@ -17,14 +17,15 @@ class ResearchResponse(BaseModel):
     
 # To use the free model, you need a Google API Key from https://aistudio.google.com/app/apikey
 # Make sure GOOGLE_API_KEY is set in your .env file
-llm = ChatGoogleGenerativeAI(model="gemini-flash-latest")
+# Using gemini-2.5-flash which has better free tier support (5 RPM limit)
+llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
 parser = PydanticOutputParser(pydantic_object=ResearchResponse)
 
 prompt = ChatPromptTemplate.from_messages(
     [
         (
      "system",
-     "You are a helpful assistant that researches and answers questions on various topics. Wrap the output in this format and provide no other text \n{format_instructions}",
+     "You are a helpful assistant that researches and answers questions on various topics. Wrap the output in this format and provide no other text. Ensure the output is valid JSON. \n{format_instructions}",
         ),
         ( "placeholder","{chat_history}"),  
         ("human", "{input}"),
@@ -68,7 +69,14 @@ if raw_response is None:
 # print(raw_response)
 
 try:
-    structured_response = parser.parse(raw_response.get("output"))
+    output_text = raw_response.get("output")
+    # Clean up markdown code blocks if present
+    if "```json" in output_text:
+        output_text = output_text.split("```json")[1].split("```")[0].strip()
+    elif "```" in output_text: # Handle case where language isn't specified
+        output_text = output_text.split("```")[1].split("```")[0].strip()
+        
+    structured_response = parser.parse(output_text)
     print(structured_response)
 except Exception as e:
     print("error parsing response",e, "Raw Response:",raw_response)
