@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
-from langchain.agents import create_tool_calling_agent, AgentExecutor
+from langchain_classic.agents import create_tool_calling_agent, AgentExecutor
 from tools import search_tool, wiki_tool, save_tool
 
 
@@ -17,8 +17,8 @@ class ResearchResponse(BaseModel):
     
 # To use the free model, you need a Google API Key from https://aistudio.google.com/app/apikey
 # Make sure GOOGLE_API_KEY is set in your .env file
-# Using gemini-2.5-flash which has better free tier support (5 RPM limit)
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
+# Using gemini-2.0-flash which is available in free tier
+llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
 parser = PydanticOutputParser(pydantic_object=ResearchResponse)
 
 prompt = ChatPromptTemplate.from_messages(

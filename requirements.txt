@@ -1,3 +1,4 @@
+# Old versions (deprecated)
 # langchain==0.1.0
 # wikipedia==1.4.0
 # langchain-community==0.0.20
@@ -7,12 +8,13 @@
 # pydantic==2.5.0
 # duckduckgo-search==5.1.0
 
+# Current dependencies
 langchain
-wikipedia==1.4.0
+langchain-core
 langchain-community
-langchain-openai
-langchain-anthropic
+langchain-classic
 langchain-google-genai
-python-dotenv==1.0.0
-pydantic==2.5.0
-duckduckgo-search==5.1.0
+wikipedia==1.4.0
+python-dotenv
+pydantic
+ddgs
