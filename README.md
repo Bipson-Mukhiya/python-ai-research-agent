@@ -1,89 +1,97 @@
-# Python AI Research Agent
+# AI Research Agent with Gemini & Rich UI
 
-A LangChain-powered AI research agent that can search the web, query Wikipedia, and save results to files using Google's Gemini API.
+A powerful, autonomously researching AI agent powered by **Google's Gemini Flash** (Free Tier). This agent breaks down complex queries, searches the web and Wikipedia, and presents the results in a beautiful, structured terminal interface.
 
-## Features
+## 🚀 Features
 
-- 🔍 **Web Search**: DuckDuckGo search with automatic retry logic for rate limits
-- 📚 **Wikipedia**: Query Wikipedia for factual information
-- 💾 **Save Results**: Export research findings to timestamped text files
-- 🤖 **AI-Powered**: Uses Google Gemini 2.0 Flash model (free tier)
+- **Autonomous Research**: Intelligently breaks down queries to find comprehensive answers.
+- **Multi-Source Retrieval**:
+  - **DuckDuckGo Search**: For real-time web information.
+  - **Wikipedia**: For encyclopedic knowledge.
+- **Premium Terminal UI**: Built with `rich` for a clean, app-like experience with loading spinners and formatted panels.
+- **Structured Output**: Delivers clear, concise summaries with sources and tool usage.
+- **Robust Error Handling**: Automatically handles rate limits and retries for uninterrupted usage.
 
-## Setup
+## 🛠️ Prerequisites
 
-### 1. Install Dependencies
+- **Python 3.10+**
+- **Google AI Studio API Key** (Free)
 
-```bash
-# Create and activate virtual environment
-python -m venv myenv
-source myenv/bin/activate  # Linux/Mac
-# myenv\Scripts\activate   # Windows
+## 📦 Installation
 
-# Install required packages
-pip install -r requirements.txt
-```
+1. **Clone the repository**:
 
-### 2. Configure API Key
+   ```bash
+   git clone <repository_url>
+   cd Python_AI_Agent_project
+   ```
 
-1. Get a free Google API key from [Google AI Studio](https://aistudio.google.com/app/apikey)
-2. Create a `.env` file in the project root:
+2. **Create a virtual environment**:
 
-```
-GOOGLE_API_KEY=your_api_key_here
-```
+   ```bash
+   python3 -m venv myenv
+   source myenv/bin/activate  # Linux/Mac
+   # myenv\Scripts\activate   # Windows
+   ```
 
-### 3. Run the Agent
+3. **Install dependencies**:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Set up API Key**:
+   - Get a free key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+   - Create a `.env` file in the root directory:
+     ```env
+     GOOGLE_API_KEY=your_actual_api_key_here
+     ```
+
+## 🏃 Usage
+
+Run the agent:
 
 ```bash
 python main.py
 ```
 
-## Dependencies
+1. The interface will launch with a clean banner.
+2. Enter your question (e.g., _"What are the latest breakthroughs in fusion energy?"_).
+3. The agent will show a **loading spinner** while it researches.
+4. The final answer will be displayed in a **formatted panel** with sources.
 
-Key packages (see `requirements.txt` for full list):
+## 🧠 Why We Use the Free Model
 
-- `langchain` - Agent framework
-- `langchain-google-genai` - Google Gemini integration
-- `langchain-community` - Community tools (DuckDuckGo, Wikipedia)
-- `ddgs` - DuckDuckGo search library
-- `python-dotenv` - Environment variable management
+We use the **Gemini Flash** model (specifically `gemini-flash-latest` or `gemini-2.5-flash`) for this project because:
 
-## Rate Limits (Free Tier)
+1.  **Cost-Effective**: It allows for extensive testing and development without incurring costs.
+2.  **Speed**: The "Flash" models are optimized for low latency, providing quick responses for interactive agents.
+3.  **Capability**: Despite being free, it has excellent reasoning and tool-use capabilities sufficient for research tasks.
 
-**Google Gemini API:**
+## ⚠️ Challenges & Troubleshooting
 
-- 15 requests per minute
-- 1 million tokens per minute
-- Daily limits apply
+### Rate Limits (429 Errors)
 
-**DuckDuckGo:**
+The free tier has strict rate limits (e.g., 5-15 requests per minute).
 
-- Built-in retry logic handles rate limits automatically
-- Falls back gracefully after 3 retries
+- **Challenge**: Complex queries triggers multiple internal steps (searching, reading, summarizing), which can quickly hit the limit.
+- **Solution**: The agent includes built-in **exponential backoff**. If it hits a limit, it will wait (e.g., 60 seconds) and retry automatically.
 
-## Project Structure
+### Model Availability (404/Found Errors)
 
-```
-├── main.py           # Main agent entry point
-├── tools.py          # Tool definitions (search, wiki, save)
-├── requirements.txt  # Python dependencies
-├── .env              # API keys (create this file)
-└── README.md         # This file
-```
+Google frequently updates model names (e.g., `gemini-1.5-flash` vs `gemini-2.0-flash`).
 
-## Troubleshooting
+- **Solution**: We currently use `gemini-flash-latest` which points to the newest stable version.
 
-### Rate Limit Errors (429)
+### "Limit Exceeded"
 
-- Wait a few minutes and try again
-- The agent has built-in retry logic for both Gemini API and DuckDuckGo
-- Consider upgrading to a paid plan for higher limits
+If you see a quota error despite retries, you may have exhausted your daily free tier allowance.
 
-### Model Not Found Errors
+- **Fix**: Wait for the quota to reset (usually daily) or switch to a different Google account/API key.
 
-- Ensure you're using `gemini-2.0-flash` (current recommended model)
-- Check that your API key is valid and set correctly
+## 📂 Project Structure
 
-## License
-
-MIT License
+- `main.py`: Core logic, UI (Rich), and Agent configuration.
+- `tools.py`: Tool definitions (Search, Wiki, File Save).
+- `requirements.txt`: Dependencies.
+- `.env`: API Credentials.
